@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "previwerpdf",
+  "name": "PreviwerPDF",
   "version": "1.0.0",
   "description": "Evita la descarga automática de PDF y fuerza su previsualización en el navegador.",
   "browser_specific_settings": {
