@@ -1,4 +1,4 @@
-# PDF Inline
+# PREVIWERPDF
 
 Extensión de navegador (Manifest V3) de código abierto que evita la descarga
 automática de archivos PDF y fuerza su previsualización en el navegador.
