@@ -29,7 +29,7 @@ automática de archivos PDF y fuerza su previsualización en el navegador.
 Descarga o clona el repositorio:
 
 ```bash
-git clone https://github.com/TU_USUARIO/pdf-inline.git
+git clone https://github.com/themanoftheredshadow/previwerpdf.git
 ```
 
 ### Chrome / Edge / Brave
