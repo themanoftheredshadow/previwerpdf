@@ -1,8 +1,11 @@
 (() => {
   "use strict";
 
+  const api = globalThis.browser ?? globalThis.chrome;
   const PDF_PATH = /\.pdf$/i;
   const PDF_PARAM = /^(?:application\/pdf|pdf)$/i;
+
+  let enabled = true;
 
   function isPdfUrl(rawHref) {
     try {
@@ -49,6 +52,10 @@
 
   function flush() {
     scheduled = false;
+    if (!enabled) {
+      pending.clear();
+      return;
+    }
     for (const node of pending) scan(node);
     pending.clear();
   }
@@ -62,6 +69,7 @@
   }
 
   const observer = new MutationObserver((mutations) => {
+    if (!enabled) return;
     for (const m of mutations) {
       if (m.type === "childList") {
         m.addedNodes.forEach((n) => {
@@ -73,8 +81,22 @@
     }
   });
 
+  // Alt+clic en un enlace a PDF: descargar de verdad
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (!enabled || !event.altKey) return;
+      const link = event.target?.closest?.("a[href]");
+      if (!link || !isPdfUrl(link.href)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      api.runtime.sendMessage({ type: "download", url: link.href });
+    },
+    true
+  );
+
   function start() {
-    scan(document.documentElement);
+    if (enabled) scan(document.documentElement);
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
@@ -82,6 +104,18 @@
       attributeFilter: ["download", "href"],
     });
   }
+
+  // Estado activado/pausado (se lee al cargar y se actualiza en vivo)
+  api.storage.local.get("enabled").then((res) => {
+    enabled = res.enabled !== false;
+    if (enabled && document.documentElement) scan(document.documentElement);
+  });
+
+  api.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.enabled) {
+      enabled = changes.enabled.newValue !== false;
+    }
+  });
 
   if (document.documentElement) {
     start();

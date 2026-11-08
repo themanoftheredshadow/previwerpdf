@@ -1,28 +1,36 @@
 {
   "manifest_version": 3,
-  "name": "PreviwerPDF",
-  "version": "1.0.0",
+  "name": "PreviewerPDF",
+  "version": "1.1.0",
   "description": "Evita la descarga automática de PDF y fuerza su previsualización en el navegador.",
   "browser_specific_settings": {
-  "gecko": {
-    "id": "pdf-inline@tu-usuario.github.io",
-    "strict_min_version": "113.0",
-    "data_collection_permissions": {
-      "required": ["none"]
+    "gecko": {
+      "id": "previewerpdf@themanoftheredshadow.github.io",
+      "strict_min_version": "121.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
-  }
-},
+  },
   "permissions": [
     "declarativeNetRequest",
-    "scripting"
+    "downloads",
+    "storage"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "PreviewerPDF: activado"
+  },
   "declarative_net_request": {
     "rule_resources": [
       {
-        "id": "pdf_inline_rules",
+        "id": "ruleset_1",
         "enabled": true,
         "path": "rules.json"
       }
